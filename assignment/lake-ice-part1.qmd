@@ -332,13 +332,42 @@ width
 
 # Is the ice-off day of the year changing more quickly in more recent years at Lake Sunapee?
 
+
+
 To answer this question, you need to divide the Sunapee dataset into two datasets that represent an early and later period. For this analysis, use the year 1970 as a cut-off (one dataset is before 1970, and the other is 1970 and after).
+
+```{r}
+
+early_sunapee <- sunapee |> filter(year < 1970)
+late_sunapee  <- sunapee |> filter(year >= 1970)
+
+fit_early <- lm(ice_off_doy ~ year, data = early_sunapee)
+fit_late  <- lm(ice_off_doy ~ year, data = late_sunapee)
+
+summary(fit_early)$coefficients
+summary(fit_late)$coefficients
+
+
+ggplot(sunapee, aes(x = year, y = ice_off_doy)) +
+  geom_point() +
+  geom_smooth(data = early_sunapee, method = "lm", se = FALSE, color = "blue") +
+  geom_smooth(data = late_sunapee, method = "lm", se = FALSE, color = "red") +
+  labs(title = "Comparison of Ice Off Trends: Pre vs. Post 1970",
+       subtitle = "Blue = 1869-1969 | Red = 1970-2014",
+       x = "Year", y = "Ice Off Day of Year") +
+  theme_classic()
+
+
+```
+
 
 **Question 12:**
 
 Use the skills developed above to evaluate the question "Is the ice-off day of year changing more quickly in more recent years at Lake Sunapee?"
 
 **Answer 12:**
+
+Yes, the ice off day of the year is changing more quickly, as shown by the graph comparision of pre-1970 and post-1970. The latter trendline is steeper, indicating a more drastic decrease comparatively.
 
 Use a mix of code, figures, and text to present your analysis.  If you want to compare slopes, be sure they are on the same plot.
 
