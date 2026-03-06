@@ -46,8 +46,13 @@ We will practice key skills in the module using a focal lake. Use the `filter` f
 
 ```{r}
 
+library(dplyr)
 
+sunapee <- ice_data |>
+  filter(lake_name == "Sunapee")
 
+head(sunapee)
+nrow(sunapee)
 ```
 
 You will be using the `sunapee` data for the rest of the module until Question 11
@@ -63,10 +68,18 @@ Be sure that the title, x-axis, and y-axis labels are clearly labeled.
 **Answer 1:**
 
 ```{r}
+library(ggplot2)
+
+ggplot(sunapee, aes(x = year, y = ice_off_doy)) +
+  geom_line() + geom_point() + geom_line() +
+  labs(title = "Sunapee Lake Ice Off Day of Year Over Time", x = "Year", 
+       y = "Day of the Year")
 
 ```
 
 # How does ice cover change over time at Lake Sunapee?
+The ice-off coverage seems to be trending downwards in relation to the days of the yearfor Lake Sunapee, signifying increasing global temperatures raises. This would lead to earlier Spring melts, or hotter days earlier in the transition from Spring to Summer.
+
 
 We want to model how the ice-off date changes over time. Our approach in this module is to use a linear regression that predicts the ice-off day of year as a function of the year. The `lm` function will estimate the parameters of the DOY = b + m \* YEAR linear regression where b is the intercept and m is the slope.
 
@@ -74,7 +87,10 @@ We want to model how the ice-off date changes over time. Our approach in this mo
 
 What do you expect the sign (plus, minus, or no change) to be for the slope of the relationship? Why?
 
+
 **Answer 2:**
+
+Considering the earlier Spring melting days for snow coverage, I would expect the signage for the slope to be "-", negative.
 
 Use the `lm` function to predict `ice_off_doy` as a function (`~`) of the year for the data.frame called `sunapee`. You can learn more about the `lm` function [here](https://www.datacamp.com/tutorial/linear-regression-R)
 
@@ -82,11 +98,18 @@ Create an object called `fit` that contains the results of the linear model.
 
 ```{r}
 
+fit <- lm(ice_off_doy ~ year, data = sunapee)
+
+
+
 ```
 
 Then, use the function `summary` to explore the result of the `lm` function.
 
 ```{r}
+
+summary(fit)
+
 
 ```
 
@@ -103,7 +126,11 @@ What is the direction of the slope? How does this match your expectations from Q
 
 **Answer 3:**
 
+The direction of the slope is negative. This was expected given the circumstances of question 2
+
 # Is our model any good?
+
+Yes, our model is good, and is statistically significant. The slope is negative and shows that Lake Sunapee, for every 1-year increase over time, is experiencing ice-off melts .11 days earlier year-over-year.
 
 ## R2
 
@@ -114,6 +141,8 @@ First, it is important to understand how much variation is explained by the mode
 What is the R2 for the regression? Based on the R2, is `year` and `ice_off_doy` strongly related?
 
 **Answer 4:**
+
+The R2 is 0.2055. The relationship is relatively weak. The R2 means that the variable year only explains about 20% of the variation in ice_off_day for Lake Sunapee. This means that the remaining 80% of the variation is probably due to other reasons or "noise" such as specific yearly weather patterns, snowfall, or temp spikes. THe relationship is statistically significant though, but the year from R2 is not a strong predictor of the exact day ice will menlt in any single year
 
 ## Residuals normally distributed
 
